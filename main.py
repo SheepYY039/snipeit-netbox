@@ -7,19 +7,20 @@ import syncer
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser()
-    parser.add_argument('--allow-update', action='store_true')
-    parser.add_argument('--allow-linking', action='store_true')
+    parser.add_argument("--allow-update", action="store_true")
+    parser.add_argument("--allow-linking", action="store_true")
     args = parser.parse_args()
 
     config = configparser.ConfigParser()
-    config.read('config.ini')
+    config.read("config.ini")
 
     logging.basicConfig(level=logging.INFO)
 
-    snipe = snipe.Snipe(config['config']['snipe_url'], config['config']['snipe_token'])
-    netbox = pynetbox.api(config['config']['netbox_url'], config['config']['netbox_token'])
+    snipe = snipe.Snipe(config["config"]["snipe_url"], config["config"]["snipe_token"])
+    netbox = pynetbox.api(
+        config["config"]["netbox_url"], config["config"]["netbox_token"]
+    )
 
     syncer = syncer.Syncer(netbox, snipe, args.allow_update, args.allow_linking)
     syncer.ensure_netbox_custom_field(False)
@@ -35,9 +36,7 @@ if __name__ == "__main__":
     syncer.sync_top_locations_to_sites(locations)
     syncer.sync_locations(locations)
 
-
     assets = snipe.get_assets_with_mac()
     syncer.sync_assets_to_devices(assets)
     # for asset in assets:
-    #     print("{} {}".format(asset['asset_tag'], asset['name']))
-
+    #     print("%s %s", asset['asset_tag'], asset['name']))
